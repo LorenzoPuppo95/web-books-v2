@@ -13,13 +13,27 @@ class BookService {
         const response =  await fetch(url);
         const data = await response.json();
         BookService.PAGES_NUMBER=Math.round(data.count/32);
-        debugger;
         const results = data.results;
-        return results;
+        const books = [];
+        if (Array.isArray(results)) {
+            for (const book of results) {
+                console.log(book);
+                const littleBook = {
+                    id: book.id,
+                    title: book.title,
+                    authors: book.authors || 'Unknown',
+                    image: book.formats['image/jpeg'] || 'No image available'
+                };
+                books.push(littleBook);
+            }
+        } else {
+            console.error('Results is not an array:', results);
+        }
+        return books;
     }
 
     nextPage(){
-        if (this.page===PAGES_NUMBER){
+        if (this.page===BookService.PAGES_NUMBER){
             this.page = 1;
         } else{
             this.page += 1;
@@ -29,18 +43,26 @@ class BookService {
 
     previousPage(){
         if (this.page===1){
-            this.page = PAGES_NUMBER;
+            this.page = BookService.PAGES_NUMBER;
         } else{
             this.page -= 1;
         }
     }
-    // async getPokemonByID(id){
-    //     const url = PokeService.BASE_URL + 
-    //                 PokeService.POKEMON_URL + id;
-    //     const response =  await fetch(url);
-    //     const data = await response.json();       
-    //     return data;
-    // }
+
+    async getBookByID(id){
+        const url = BookService.BASE_URL + id;
+        const response =  await fetch(url);
+        const data = await response.json();
+        const littleBook = {
+            id: data.id,
+            title: data.title,
+            authors: data.authors || 'Unknown',
+            image: data.formats['image/jpeg'] || 'No image available',
+            summaries: data.summaries || 'No summaries available',
+            subjects: data.subjects || 'No subjects available',
+        };
+        return littleBook;
+    }
 }
 
 export default BookService;

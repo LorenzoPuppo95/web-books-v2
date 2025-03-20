@@ -3,28 +3,39 @@ class StorageService {
     constructor() {}
 
     save(book){
-        const starredBookString = localStorage.getItem('starred');
-        if (starredBookString) {
-            
-            const starredBooks = JSON.parse(starredBookString);
-            starredBooks.push(book);
-            localStorage.setItem('starred', JSON.stringify(starredBooks));
+        const favouritesBookString = localStorage.getItem('favourites');
+        let favouritesBooks = [];
+        if (favouritesBookString) {
+            favouritesBooks = JSON.parse(favouritesBookString);
+        }
+
+        const bookIndex = favouritesBooks.findIndex(favouritesBook => favouritesBook.id === book.id);
+        if (bookIndex === -1) {
+            favouritesBooks.push(book);
         } else {
-            const starredBooks = [];
-            starredBooks.push(book);
-            localStorage.setItem('starred', JSON.stringify(starredBooks));
-        }    
+            favouritesBooks.splice(bookIndex, 1);
+        }
+
+        localStorage.setItem('favourites', JSON.stringify(favouritesBooks));
     }
 
-    getStarredBookData(){
-        const starredBookString = localStorage.getItem('starred');
-        if (starredBookString) {  
-            const starredBooks = JSON.parse(starredBookString);
-            return starredBooks;
+    getFavouritesBooksData(){
+        const favouritesBookString = localStorage.getItem('favourites');
+        if (favouritesBookString) {  
+            const favouritesBooks = JSON.parse(favouritesBookString);
+            return favouritesBooks;
         } else {
-            const starredBooks = [];
-            return starredBooks;
+            return [];
         }
+    }
+
+    isSaved(bookId) {
+        const favouritesBookString = localStorage.getItem('favourites');
+        if (favouritesBookString) {
+            const favouritesBooks = JSON.parse(favouritesBookString);
+            return favouritesBooks.some(favouritesBook => favouritesBook.id === bookId);
+        }
+        return false;
     }
 }
 

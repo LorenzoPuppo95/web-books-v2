@@ -1,3 +1,5 @@
+import BookFormComponent from "./book-form-component";
+
 class MainPageComponent {
 
     constructor(bookService, storageService) {
@@ -13,28 +15,17 @@ class MainPageComponent {
         prevBtn.addEventListener('click', () => this.previousPressed())
 
         this.books = await this.bookService.getBooksData();
-        this.render(this.books)
+        this.render(this.books);
     } 
 
     render(books) {
         const mainContainer = document.querySelector('#main-container');
         mainContainer.innerHTML = '';
         for (let i = 0; i < books.length; i++) {
-            const book = books[i]
-            const bookContainer = document.createElement('a');
-            // bookContainer.href = './detail.html?id=' + book.id;
-            const html = `
-                <img src="${book.formats["image/jpeg"]}" alt="">
-                <h3>${book.title}</h3>
-                <h3>${book.id}</h3>
-            `
-            bookContainer.innerHTML = html;
-            const saveBtn = document.createElement('button');
-            saveBtn.addEventListener('click', (event) => this.saveBook(event, i))
-            const node = document.createTextNode('salva');
-            saveBtn.appendChild(node);
-            bookContainer.appendChild(saveBtn);
-            mainContainer.appendChild(bookContainer);
+            const book = books[i];
+            const formComponent = new BookFormComponent(book, this.storageService);
+            const form = formComponent.render();           
+            mainContainer.appendChild(form);
         }
     }
 
@@ -48,12 +39,6 @@ class MainPageComponent {
         this.bookService.previousPage();
         this.books = await this.bookService.getBooksData();
         this.render(this.books)
-    }
-
-    saveBook(event, index){
-        event.preventDefault();
-        const selectedBook = this.books[index]
-        this.storageService.save(selectedBook);
     }
 }
 
