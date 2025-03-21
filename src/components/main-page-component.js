@@ -9,10 +9,16 @@ class MainPageComponent {
 
     async start(){
         const nextBtn = document.getElementById('next-btn');
-        nextBtn.addEventListener('click', () => this.nextPressed())
+        nextBtn.addEventListener('click', () => this.nextPressed());
 
         const prevBtn = document.getElementById('prev-btn');
-        prevBtn.addEventListener('click', () => this.previousPressed())
+        prevBtn.addEventListener('click', () => this.previousPressed());
+
+        const nextBtnFtr = document.getElementById('next-btn-ftr');
+        nextBtnFtr.addEventListener('click', () => this.nextPressed());
+
+        const prevBtnFtr = document.getElementById('prev-btn-ftr');
+        prevBtnFtr.addEventListener('click', () => this.previousPressed())
 
         this.books = await this.bookService.getBooksData();
         this.render(this.books);

@@ -44,5 +44,3 @@ export default class BookFormComponent {
         }
     }
 }
-
-// libri pagination, detail, preferiti, rimozione preferiti, immagine o icona per i preferiti
